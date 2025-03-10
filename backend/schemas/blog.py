@@ -1,16 +1,21 @@
 from typing import Optional
-from pydantic import BaseModel, root_validator
-from datetime import date
+from pydantic import BaseModel, validator, field_validator
+from datetime import date, datetime
+
 
 class CreateBlog(BaseModel):
     title: str
     slug: str
     content: Optional[str]
-    @root_validator(pre=True)
-    def generate_slug(cls, values):
-        if "title" in values: #generate slug before data validated
-            values["slug"] = values.get("title").replace(" ", "-").lower()
-        return values
+
+    @validator('slug', pre=True)
+    def generate_slug(cls, slug, values):
+        title = values.get('title')
+        slug = None
+        if title:
+            slug = title.replace(" ", "-").lower()
+        return slug
+
 
 class ShowBlog(BaseModel):
     title: str
@@ -18,3 +23,8 @@ class ShowBlog(BaseModel):
     created_at: date
     class Config():
         orm_mode = True
+    @field_validator('created_at', mode='before')
+    def format_date(cls, v):
+        if isinstance(v, datetime):
+            return v.date()
+        return v
