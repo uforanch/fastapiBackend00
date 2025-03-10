@@ -23,6 +23,7 @@ def start_application():
     return app
 
 
+#create engine
 SQLALCHEMY_DATABASE_URL = "sqlite:///./test_db.db"
 engine = create_engine(
     SQLALCHEMY_DATABASE_URL, connect_args={"check_same_thread": False}
