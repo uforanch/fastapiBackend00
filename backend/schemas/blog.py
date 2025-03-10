@@ -2,7 +2,7 @@ from typing import Optional
 from pydantic import BaseModel, validator, field_validator
 from datetime import date, datetime
 
-
+#equivalent of dtos
 class CreateBlog(BaseModel):
     title: str
     slug: str
@@ -28,3 +28,6 @@ class ShowBlog(BaseModel):
         if isinstance(v, datetime):
             return v.date()
         return v
+
+class UpdateBlog(CreateBlog):
+    pass
